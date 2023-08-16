@@ -10,14 +10,12 @@ router.get("/", async (req, res) => {
     // "case-insensitive." When you use the "i" flag in a regular expression, it indicates that the pattern
     // matching should be done without regard to the case of the letters. This means that it will match both
     // uppercase and lowercase letters.
-
     searchOptions.name = new RegExp(req.query.name, "i");
   }
 
   try {
     const authors = await Author.find(searchOptions);
     res.render("authors/index", { authors: authors, searchOptions: req.query });
-    console.log("here");
   } catch {
     res.redirect("/");
   }

@@ -34,6 +34,10 @@ const bookSchema = new mongoose.Schema({
     required: true,
     ref: "Author",
   },
+  urlVideoDetails: {
+    type: String,
+    default: "https://www.youtube.com/embed/GtTolway2H0",
+  },
 });
 
 bookSchema.virtual("coverImagePath").get(function () {

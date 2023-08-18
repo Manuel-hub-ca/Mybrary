@@ -281,6 +281,25 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
+// Assuming you want to use the "id" parameter
+router.get("/:id/video", async (req, res) => {
+  const { id } = req.params; // Use "id" consistently here
+  try {
+    // Retrieve the book from the database based on the bookId
+    const book = await Book.findById(id); // Use "id" consistently here
+
+    if (!book) {
+      return res.status(404).send("Book not found");
+    }
+
+    // Render the video page with the associated video URL
+    res.render("books/video", { book: book });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
 async function renderNewPage(res, book, hasError = false) {
   renderFormPage(res, book, "new", hasError);
 }

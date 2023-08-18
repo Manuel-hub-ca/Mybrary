@@ -10,3 +10,6 @@
 <a href="/books/<%= book.id %>/edit">Edit</a>
 <%- include('../partials/deleteForm', { url: `/books/${book.id}` }) %>
 <a href="/authors/<%= book.author.id %>">View Author</a>
+<a href="/books/<%= book.id %>/video">
+  Watch a video about info offered by the author of this book
+</a>

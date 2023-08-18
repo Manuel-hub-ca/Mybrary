@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const Author = require("../models/author");
+const author = require("../models/author");
+const Book = require("../models/book");
 //All Authors Route
 
 router.get("/", async (req, res) => {
@@ -33,13 +35,77 @@ router.post("/", async (req, res) => {
   });
   try {
     const newAuthor = await author.save();
-    //     // res.redirect(`authors/${newAuthor.id}`);
-    res.redirect(`authors`);
+    res.redirect(`authors/${newAuthor.id}`);
   } catch {
     res.render("authors/new", {
       author: author,
       errorMessage: "Error creating Author",
     });
+  }
+});
+
+//this router should be before the one router.get("/new" ...
+router.get("/:id", async (req, res) => {
+  try {
+    const author = await Author.findById(req.params.id);
+    const books = await Book.find({ author: author.id }).limit(6).exec();
+    res.render("authors/show", {
+      author: author,
+      booksByAuthor: books,
+    });
+  } catch {
+    res.redirect("/");
+  }
+});
+
+router.get("/:id/edit", async (req, res) => {
+  try {
+    const author = await Author.findById(req.params.id);
+    res.render("authors/edit", { author: author });
+  } catch {}
+});
+
+router.put("/:id", async (req, res) => {
+  let author;
+
+  try {
+    author = await Author.findById(req.params.id);
+    author.name = req.body.name;
+    await author.save();
+    res.redirect(`/authors/${author.id}`);
+  } catch (error) {
+    console.error(error);
+    if (author == null) {
+      res.redirect("/");
+    } else {
+      res.render("authors/new", {
+        author: author,
+        errorMessage: "Error updating Author",
+      });
+    }
+  }
+});
+
+router.delete("/:id", async (req, res) => {
+  try {
+    const author = await Author.findById(req.params.id);
+    if (!author) {
+      return res.redirect("/");
+    }
+
+    await author.deleteWithCheck(); // Call the custom deleteWithCheck() method
+    res.redirect(`/authors`);
+  } catch (error) {
+    console.error(error);
+    if (error.message === "This author has books still") {
+      // Handle error case where author has books
+      // res.render("error-page", { errorMessage: error.message });
+      return res.send(
+        "<script>alert('This author has books and cannot be deleted.'); window.location.href = '/authors';</script>"
+      );
+    } else {
+      res.redirect(`/authors/${req.params.id}`);
+    }
   }
 });
 

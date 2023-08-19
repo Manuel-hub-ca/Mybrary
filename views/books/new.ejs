@@ -1,6 +1,15 @@
 <h2 class="page-header">New Book</h2>
 <form action="/books" method="POST">
   <%- include('_form_fields') %>
-  <a href="/books">Cancel</a>
-  <button type="submit">Create</button>
+
+  <!-- In this case, the element will have both the styles associated 
+  with the form-row class and the styles associated with the btn-row class applied to it.
+  It's important to note that the order of the class names matters.
+  If two classes have conflicting styles, the styles from the class listed last will usually take precedence. -->
+
+  <divc class="form-row form-row-end btn-row">
+    <a class="btn btn-danger" href="/books">Cancel</a>
+    <button class="btn btn-primary" type="submit">Create</button>
+  </div>
+
 </form>
